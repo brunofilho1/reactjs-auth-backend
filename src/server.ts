@@ -106,6 +106,7 @@ app.post("/sessions", (request, response) => {
   if (!user || password !== user.password) {
     return response.status(401).json({
       error: true,
+      code: "incorrect.credentials",
       message: "E-mail or password incorrect.",
     });
   }
@@ -132,6 +133,7 @@ app.post("/refresh", addUserInformationToRequest, (request, response) => {
   if (!user) {
     return response.status(401).json({
       error: true,
+      code: "user.not.found",
       message: "User not found.",
     });
   }
@@ -176,7 +178,11 @@ app.get("/me", checkAuthMiddleware, (request, response) => {
   if (!user) {
     return response
       .status(400)
-      .json({ error: true, message: "User not found." });
+      .json({
+        error: true,
+        code: "user.not.found",
+        message: "User not found.",
+      });
   }
 
   return response.json({
